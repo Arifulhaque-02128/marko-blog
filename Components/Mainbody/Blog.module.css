@@ -1,0 +1,12 @@
+.blog{
+    background-color: thistle;
+    border: 1px solid #eaeaea;
+    border-radius: 15px;
+    padding: 20px 15px;
+    margin: 25px 10px;
+}
+
+.title:hover{
+    color:tomato;
+    cursor: pointer;
+}

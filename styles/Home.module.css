@@ -1,10 +1,31 @@
 .container {
-  min-height: 100vh;
+  /* min-height: 10vh; */
+  width: 100vw;
+  /* padding: 0 0.5rem; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}
+
+.formContainer{
+  width: 100vw;
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.formInput{
+  width: 40vw;
+}
+
+@media only screen and (max-width: 720px){
+  .formInput{
+    width: 80vw;
+  }
+  
 }
 
 .main {
