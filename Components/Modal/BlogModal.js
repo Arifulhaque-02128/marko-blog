@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import EditorContainer from '../EditorContainer/EditorContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import {FiEdit3} from 'react-icons/fi';
 
 function getModalStyle() {
     const top = 50 ;
@@ -40,14 +41,15 @@ const BlogModal = () => {
     };
     const body = (
         <div style={modalStyle} className={classes.paper}>
-          <h2 className="text-center my-3" id="simple-modal-title">Write Blog...</h2>
+          <h2 className="text-center my-3" id="simple-modal-title">Write Your Blog</h2>
           <EditorContainer />
         </div>
     );
     return (
         <div>
-            <button type="button" onClick={handleOpen}>
-                Write Your Blog
+            <button className="btn btn-info" type="button" onClick={handleOpen}>
+                <FiEdit3 size={20} className={`mr-3`} />
+                Start Writing Blog...
             </button>
             <Modal
                 open={open}

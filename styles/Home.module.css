@@ -27,6 +27,21 @@
   }
   
 }
+.header{
+  color: crimson;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+ /* file upload */
+.uploadFile{
+  background-color: aquamarine;
+  border: 1px solid grey;
+}
+
+.coverImgStyle{
+  height: 90px;
+  width: 200px;
+}
 
 .main {
   padding: 5rem 0;
