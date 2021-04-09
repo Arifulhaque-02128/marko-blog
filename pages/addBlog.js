@@ -3,26 +3,38 @@ import BlogModal from '../Components/Modal/BlogModal';
 import { useForm } from "react-hook-form";
 import formStyle from '../styles/Home.module.css'
 import {FaCloudUploadAlt} from 'react-icons/fa'
+import { connect } from 'react-redux';
+import { storeBlogData } from '../Store/Actions/Actions';
+import moment from 'moment';
 
 
-const addBlog = () => {
+const addBlog = ({postBlog}) => {
 
     const [coverImg, setCoverImg] = useState('');
+    const [authorImg, setAuthorImg] = useState('');
+    const [blogContents, setBlogContents] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    console.log(coverImg);
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/marko-ai';
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const onSubmit = async ( data, e ) => {
         e.preventDefault();
-        const coverImage = await imageUpload(coverImg)
+        const hostedImg = await imageUpload(coverImg, authorImg)
         const {title, authorName} = data;
-        const blogData = {title, authorName, cover_photo: coverImage}
-        console.log(blogData);
+        const blogData = {title, authorName, cover_photo: hostedImg[0], author_img: hostedImg[1], blogContents, date: moment().format('ll')}
+        postBlog(blogData)
+        console.log("in addBlog page ", blogData);
         reset({});
         setCoverImg('');
+        setAuthorImg('');
+        setBlogContents('');
+        setIsSubmitted(true);
     };
 
-    const imageUpload = async (coverImg) => {
+    const imageUpload = async (coverImg, authorImg) => {
         const formData = new FormData();
         formData.append('file', coverImg);
         formData.append('upload_preset', 'markoImg');
@@ -32,7 +44,18 @@ const addBlog = () => {
             body: formData,
         });
         const res2 = await res.json();
-        return res2
+
+        const formData2 = new FormData();
+        formData2.append('file', authorImg);
+        formData2.append('upload_preset', 'markoImg');
+        formData2.append('cloud_name', 'marko-ai');
+        const res3 = await fetch(`${CLOUDINARY_URL}/image/upload`, {
+            method: 'POST',
+            body: formData2,
+        });
+        const res4 = await res3.json();
+
+        return [res2.url, res4.url]
     }
 
     return (
@@ -58,17 +81,32 @@ const addBlog = () => {
                 }
 
                 <div className="mt-3">
-                    <BlogModal />
+                    <BlogModal blogContentsProp={[blogContents, setBlogContents]} />
+                    { 
+                        blogContents && <p className="text-success">(Blog is written and stored successfully...)</p>
+                    }
                 </div>
-
                 <br/>
-                <input className='btn btn-dark' type="submit" />
+                <label className={`${formStyle.uploadFile} btn`}>
+                    <FaCloudUploadAlt size={25} className={`mr-3`} />
+                    Upload Author's Image <input onChange={(e) => setAuthorImg(e.target.files[0])} name="cover" type="file" hidden /> <br/>
+                </label> <br/>
+                {
+                    authorImg && <img className={formStyle.coverImgStyle} src={authorImg?URL.createObjectURL(authorImg): ''} />
+                }
+                <br/>
+                <input className='btn btn-dark mt-2' type="submit" />
+                {
+                    isSubmitted && <p className="text-success">Your blog is submitted successfully...</p>
+                }
             </form>
             
         </div>
     );
 };
 
-export default addBlog;
+const mapDispatchToProps = {
+    postBlog: storeBlogData
+}
 
-
+export default connect(null, mapDispatchToProps)(addBlog);

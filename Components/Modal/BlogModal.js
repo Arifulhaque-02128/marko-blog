@@ -17,8 +17,8 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
     paper: {
       position: 'absolute',
-      width: "80vw",
-      height: "70vh",
+      width: "90vw",
+      height: "95vh",
       backgroundColor: theme.palette.background.paper,
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
@@ -26,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const BlogModal = () => {
+const BlogModal = ({blogContentsProp}) => {
+
+    const [blogContents, setBlogContents] = blogContentsProp;
+
     const classes = useStyles();
     
     const [modalStyle] = useState(getModalStyle);
@@ -42,7 +45,7 @@ const BlogModal = () => {
     const body = (
         <div style={modalStyle} className={classes.paper}>
           <h2 className="text-center my-3" id="simple-modal-title">Write Your Blog</h2>
-          <EditorContainer />
+          <EditorContainer blogContentsProp={[blogContents, setBlogContents]} />
         </div>
     );
     return (
