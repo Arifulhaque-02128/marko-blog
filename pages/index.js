@@ -4,6 +4,7 @@ import Layout from '../Layout/Layout'
 import styles from '../styles/Home.module.css'
 import blogsData from '../DummyData/DummyData'
 import { fetchBlogData } from '../Store/Actions/Actions'
+import Header from '../Components/Header/Header';
 import { connect } from 'react-redux'
 
 function Home({fetchBlogData}) {
@@ -11,6 +12,7 @@ function Home({fetchBlogData}) {
   return (
     <div>
       <Layout />
+      <Header />
       <main className={styles.main}>
         <MainBody />
       </main>
