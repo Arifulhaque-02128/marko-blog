@@ -40,10 +40,12 @@
 }
 
 .coverImgStyle{
-  height: 90px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
 }
-
+.contentStyle > p{
+  text-align: justify !important;
+}
 .main {
   padding: 5rem 0;
   flex: 1;

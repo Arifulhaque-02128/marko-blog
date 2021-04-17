@@ -5,11 +5,11 @@ import Avatar from '@material-ui/core/Avatar';
 
 const Blog = ({blog}) => {
     const [isHover, setIsHover] = useState(false);
-    const {title, _id, authorName, author_img, blogContents, cover_photo, date} = blog;
+    const { slug, data } = blog;
+    const {title, authorName, author_img, cover_photo, date, excerpt } = data
     return (
         <Link 
-            href = {`/${_id}`}
-            // href={`/post/${_id}`}
+            href = {`/${slug}`}
         >
             <div onMouseOver={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} className={isHover ? 'blogHover' : 'blog'}>
                 <div>
@@ -21,6 +21,9 @@ const Blog = ({blog}) => {
                         <Avatar alt="Author Image" src={author_img} />
                         <p className="font-weight-bold mx-3 h6">{authorName}</p>
                     </div>
+                    <div>
+                        <h6>{excerpt}</h6>
+                    </div>
                     {/* <article className="text-justify text-secondary">{bodyContent}</article> */}
                     <div className="btn btn-secondary">
                         Markopolo.ai
@@ -30,6 +33,7 @@ const Blog = ({blog}) => {
                     .blog{
                         background: url(${cover_photo}) no-repeat;
                         background-size: cover;
+                        color: white;
                         border: 1px solid #eaeaea;
                         border-radius: 15px;
                         padding: 20px 15px;
@@ -39,6 +43,7 @@ const Blog = ({blog}) => {
                         background-color: white;
                         border: 1px solid #eaeaea;
                         border-radius: 15px;
+                        color: black;
                         padding: 20px 15px;
                         margin: 25px 10px;
                         cursor: pointer;

@@ -1,23 +1,17 @@
 import React from 'react';
 import mainBodyStyle from './MainBody.module.css'
 import Blog from './Blog';
-import { connect } from 'react-redux';
 
-const MainBody = ({blogsData}) => {
+const MainBody = ({allBlogs}) => {
+
     
     return (
         <main className={mainBodyStyle.mainBody}>
             {
-                blogsData.map(( blog, index )=> <Blog key={index} blog={blog} /> )
+                allBlogs.map(( blog )=> <Blog key={blog.slug} blog={blog} /> )
             }
         </main>
     );
 };
 
-const mapStateToProps = (state) => {
-    return { 
-      blogsData: state.posts
-    }
-}
-
-export default connect(mapStateToProps)(MainBody);
+export default MainBody;

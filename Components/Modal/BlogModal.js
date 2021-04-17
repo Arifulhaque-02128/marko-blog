@@ -26,9 +26,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const BlogModal = ({blogContentsProp}) => {
+const BlogModal = ({blogContentsProp, excerptProp}) => {
 
     const [blogContents, setBlogContents] = blogContentsProp;
+    const [excerpt, setExcerpt] = excerptProp;
 
     const classes = useStyles();
     
@@ -45,7 +46,7 @@ const BlogModal = ({blogContentsProp}) => {
     const body = (
         <div style={modalStyle} className={classes.paper}>
           <h2 className="text-center my-3" id="simple-modal-title">Write Your Blog</h2>
-          <EditorContainer blogContentsProp={[blogContents, setBlogContents]} />
+          <EditorContainer blogContentsProp={[blogContents, setBlogContents]} excerptProp={[excerpt, setExcerpt]} />
         </div>
     );
     return (

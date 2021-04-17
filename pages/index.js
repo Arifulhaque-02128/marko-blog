@@ -2,27 +2,28 @@ import MainBody from '../Components/Mainbody/MainBody'
 import Footer from '../Components/Footer/Footer'
 import Layout from '../Layout/Layout'
 import styles from '../styles/Home.module.css'
-import blogsData from '../DummyData/DummyData'
-import { fetchBlogData } from '../Store/Actions/Actions'
 import Header from '../Components/Header/Header';
-import { connect } from 'react-redux'
+import { getBlogsData } from '../lib/data'
 
-function Home({fetchBlogData}) {
-  fetchBlogData(blogsData)
+function Home({allBlogs}) {
+  console.log(allBlogs)
   return (
     <div>
       <Layout />
       <Header />
       <main className={styles.main}>
-        <MainBody />
+        <MainBody allBlogs={allBlogs} />
       </main>
       <Footer />
     </div>
   )
 }
 
-const mapDispatchToProps = {
-  fetchBlogData: fetchBlogData
-}
+export default Home
 
-export default connect(null, mapDispatchToProps)(Home)
+export function getStaticProps(){
+  const allBlogs = getBlogsData()
+  return {
+    props: {allBlogs}
+  }
+}

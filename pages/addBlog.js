@@ -13,9 +13,8 @@ const addBlog = ({postBlog}) => {
     const [coverImg, setCoverImg] = useState('');
     const [authorImg, setAuthorImg] = useState('');
     const [blogContents, setBlogContents] = useState('');
-    const [isSubmitted, setIsSubmitted] = useState(false);
-
-    console.log(coverImg);
+    const [isSubmitted, setIsSubmitted] = useState('');
+    const [excerpt, setExcerpt] = useState('');
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/marko-ai';
 
@@ -24,15 +23,37 @@ const addBlog = ({postBlog}) => {
         e.preventDefault();
         const hostedImg = await imageUpload(coverImg, authorImg)
         const {title, authorName} = data;
-        const blogData = {title, authorName, cover_photo: hostedImg[0], author_img: hostedImg[1], blogContents, date: moment().format('ll')}
+        const slug = title.toLowerCase().replace(/\s/g, "-")
+        const blogData = {title, slug, authorName, excerpt, cover_photo: hostedImg[0], author_img: hostedImg[1], blogContents: blogContents, date: moment().format('ll')}
         postBlog(blogData)
         console.log("in addBlog page ", blogData);
+        const postResponse = postToApi(blogData)
         reset({});
         setCoverImg('');
+        setExcerpt('')
         setAuthorImg('');
         setBlogContents('');
-        setIsSubmitted(true);
+        setIsSubmitted(postResponse);
     };
+
+    const postToApi = async(blogData) => {
+        return await fetch('http://localhost:3000/api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(blogData),
+            })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            return "Your blog is successfully posted."
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            return "Failed to post."
+        });
+    }
 
     const imageUpload = async (coverImg, authorImg) => {
         const formData = new FormData();
@@ -69,9 +90,6 @@ const addBlog = ({postBlog}) => {
                 <input className={`${formStyle.formInput} form-control mt-2`} {...register("title", { required: true })} placeholder="Title of the Blog..." />
                 {errors.title && <span className="text-danger">This field is required</span>} <br/>
 
-                {/* <input className={`${formStyle.uploadFile}`} type="file" id="customFile" {...register("cover", { required: true })} /> <br/>
-                {errors.cover && <span className="text-danger">This field is required</span>} <br/> */}
-
                 <label className={`${formStyle.uploadFile} btn`}>
                     <FaCloudUploadAlt size={25} className={`mr-3`} />
                     Upload Cover Image <input onChange={(e) => setCoverImg(e.target.files[0])} name="cover" type="file" hidden /> <br/>
@@ -81,7 +99,7 @@ const addBlog = ({postBlog}) => {
                 }
 
                 <div className="mt-3">
-                    <BlogModal blogContentsProp={[blogContents, setBlogContents]} />
+                    <BlogModal blogContentsProp={[blogContents, setBlogContents]} excerptProp={[excerpt, setExcerpt]} />
                     { 
                         blogContents && <p className="text-success">(Blog is written and stored successfully...)</p>
                     }
@@ -97,7 +115,7 @@ const addBlog = ({postBlog}) => {
                 <br/>
                 <input className='btn btn-dark mt-2' type="submit" />
                 {
-                    isSubmitted && <p className="text-success">Your blog is submitted successfully...</p>
+                    isSubmitted && <p className="text-secondary my-3">({isSubmitted})</p>
                 }
             </form>
             

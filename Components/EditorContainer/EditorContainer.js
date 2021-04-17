@@ -10,9 +10,10 @@ const Editor = dynamic(
 )
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const EditorContainer = ({blogContentsProp}) => {
+const EditorContainer = ({blogContentsProp, excerptProp}) => {
 
     const [blogContents, setBlogContents]= blogContentsProp;
+    const [excerpt, setExcerpt] = excerptProp;
 
     const [markupBlogContent, setMarkupBlogContent] = useState([])
 
@@ -60,7 +61,9 @@ const EditorContainer = ({blogContentsProp}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // const data = editorState.getCurrentContent().getPlainText();
+        const plainData = editorState.getCurrentContent().getPlainText();
+        const blogExcerpt = plainData.slice(0, 50)
+        setExcerpt(`${blogExcerpt}...`)
 
         const rawContentState = convertToRaw(editorState.getCurrentContent());
 
@@ -70,7 +73,7 @@ const EditorContainer = ({blogContentsProp}) => {
             // directional, 
             // customEntityTransform
         );
-        setBlogContents(markup);
+        setBlogContents(rawContentState);
         setMarkupBlogContent(markup)
         setDraftEditorState({editorState: EditorState.createEmpty(),})
     }

@@ -1,21 +1,14 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import blogData from '../../DummyData/DummyData';
 import styles from '../../styles/Home.module.css'
 import { Avatar } from '@material-ui/core';
 import Head from 'next/head';
 import ReactHtmlParser from 'react-html-parser';
 import Footer from '../../Components/Footer/Footer';
+import { getSingleBlogById, getAllSlugName } from '../../lib/data';
 
-const singleBlog = () => {
+const singleBlog = ({mainContent, title, authorName, author_img}) => {
 
-    const router = useRouter()
-    const { _id } = router.query
-
-    const blogDataById = blogData.find(blog => blog._id === _id)
-    const {title, authorName, author_img, blogContents} = blogDataById;
-    const content = blogContents.replace(/↵/gi, "<br />")
-    
+    const content = mainContent
     return (
         <div>
             <div className={`${styles.container}`}>
@@ -33,7 +26,7 @@ const singleBlog = () => {
                     <h6 className="mx-3">{authorName}</h6>
                 </div>
                 <div className="m-5 p-5" >
-                <div className={`text-center ${styles.contentStyle}`}>{ ReactHtmlParser (content) }</div>
+                    <div className={`text-center ${styles.contentStyle}`}>{ ReactHtmlParser (content) }</div>
                 </div>
             </div>
             <Footer />
@@ -42,3 +35,20 @@ const singleBlog = () => {
 };
 
 export default singleBlog;
+
+export async function getStaticProps({ params }) {
+    const singleBlog = getSingleBlogById(params.slug)
+    const {data, content} = singleBlog;
+    const {title, authorName, author_img} = data;
+    const mainContent = content.replace(/↵/gi, "<br />")
+    return {
+      props: { mainContent, title, authorName, author_img, }, 
+    }
+}
+export async function getStaticPaths() {
+    const allPaths = getAllSlugName();
+    const paths = allPaths.map((path) => ({
+        params: { slug: path.toString() },
+      }))
+      return { paths, fallback: false }
+}
